@@ -4,6 +4,7 @@ import {Json} from '@optum/openid-client-server/dist/json'
 import {Session, SessionStore} from '@optum/openid-client-server/dist/session'
 import assert from 'assert'
 import {Collection, MongoClient, MongoClientOptions} from 'mongodb'
+import {TokenSet} from 'openid-client'
 
 export interface MongoSessionStoreOptions {
     collectionName: string
@@ -56,6 +57,15 @@ export class MongoSessionStore implements SessionStore {
         return this._sessionCollection
     }
 
+    withTokenSet(session: Session): Session {
+        if (session.tokenSet) {
+            Object.assign(session, {
+                tokenSet: new TokenSet(session.tokenSet)
+            })
+        }
+        return session
+    }
+
     /*
         NOTE: consider removing this from the interface in @optum/openid-client-server
         as it doesn't appear to be used
@@ -72,7 +82,7 @@ export class MongoSessionStore implements SessionStore {
         const session = await this.sessionCollection.findOne({sessionId})
 
         if (session) {
-            return session
+            return this.withTokenSet(session)
         }
     }
 
@@ -84,7 +94,7 @@ export class MongoSessionStore implements SessionStore {
         const session = await this.sessionCollection.findOne(queryFilter)
 
         if (session) {
-            return session
+            return this.withTokenSet(session)
         }
     }
 
