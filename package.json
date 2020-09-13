@@ -1,6 +1,6 @@
 {
     "name": "@lxghtless/openid-client-server-mongo-session",
-    "version": "1.0.0-canary.1",
+    "version": "1.0.0-canary.2",
     "repository": "git@github.com:lxghtless/openid-client-server-mongo-session",
     "homepage": "https://github.com/lxghtless/openid-client-server-mongo-session/",
     "author": {
