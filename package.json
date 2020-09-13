@@ -64,7 +64,7 @@
         "uuid": "^8.3.0"
     },
     "peerDependencies": {
-        "@optum/openid-client-server": ">=1.0.0"
+        "@optum/openid-client-server": "^1.0.1"
     },
     "husky": {
         "hooks": {
