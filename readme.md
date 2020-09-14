@@ -8,6 +8,9 @@
 </p>
 
 <p align="center">
+	<a href="https://www.npmjs.com/package/@lxghtless/openid-client-server-mongo-session">
+		<img src="https://img.shields.io/npm/v/@lxghtless/openid-client-server-mongo-session?color=blue" />
+	</a>
 	<a href="https://www.typescriptlang.org/">
 		<img src="https://aleen42.github.io/badges/src/typescript.svg" />
 	</a>
@@ -50,7 +53,10 @@ const sessionStore = await MongoSessionStore.createSessionStore(
 
 ```ts
 import {MongoClient} from 'mongodb'
-import MongoSessionStore from '@lxghtless/openid-client-server-mongo-session'
+import {
+    MongoSessionStore,
+    MongoSessionStoreOptions
+} from '@lxghtless/openid-client-server-mongo-session'
 
 const mongoUrl = 'mongodb://mongodb0.example.com:27017'
 const storeOptions: MongoSessionStoreOptions = {
