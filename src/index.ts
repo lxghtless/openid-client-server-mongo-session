@@ -5,6 +5,7 @@ import {Session, SessionStore} from '@optum/openid-client-server/dist/session'
 import assert from 'assert'
 import {Collection, MongoClient, MongoClientOptions} from 'mongodb'
 import {TokenSet} from 'openid-client'
+import pRetry from 'p-retry'
 
 export interface MongoSessionStoreOptions {
     collectionName: string
@@ -73,8 +74,21 @@ export class MongoSessionStore implements SessionStore {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     async clear(): Promise<void> {}
 
+    async ensureDoesNotExist(sessionId: string): Promise<void> {
+        const session = await this.sessionCollection.findOne({sessionId})
+
+        if (session) {
+            throw new pRetry.AbortError('session still exists')
+        }
+    }
+
     async destroy(sessionId: string): Promise<void> {
         await this.sessionCollection.deleteOne({sessionId})
+        /*
+            Give the eventually consistent nature of MongoDB time to delete the record.
+            NOTE: This will simply move on without error if the session never deletes
+        */
+        await pRetry(() => this.ensureDoesNotExist(sessionId), {retries: 5})
     }
 
     // TODO: Consider change return type to Promise<Session | null | undefined> in @optum/openid-client-server to support responses like MongoClient.

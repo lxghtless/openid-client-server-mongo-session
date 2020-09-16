@@ -112,6 +112,19 @@ describe('mongo-session-store', () => {
         expect(session).to.be.undefined
     })
 
+    it('should not throw if max retries exceeded', async () => {
+        const sessionId = uuid()
+        const sessionPatch: Json = {}
+
+        await sessionStore.set(sessionId, sessionPatch)
+
+        await sessionStore.destroy(uuid())
+
+        const session = await sessionStore.get(sessionId)
+
+        expect(session).to.not.be.undefined
+    })
+
     it('should get by key value pair', async () => {
         const sessionId = uuid()
         const csrfString = uuid()
